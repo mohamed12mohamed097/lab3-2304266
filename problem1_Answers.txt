@@ -3,14 +3,13 @@ Problem 1 Answers
 Q1.1
 SQL:
 USE company;
-DELETE FROM EMPLOYEE WHERE ssn='204518837';
+DELETE FROM EMPLOYEE WHERE ssn='290110201';
 
 Output:
 ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`company`.`department`, CONSTRAINT `department_ibfk_1` FOREIGN KEY (`mgr_ssn`) REFERENCES `employee` (`ssn`))
 
 Explanation:
 The employee is the manager of a department, so DEPARTMENT.mgr_ssn still references it. MySQL rejects the delete to keep referential integrity.
-
 
 Q1.2
 SQL:

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="topbar">
+    <h1 style="margin:0">To-Do</h1>
+    <div>Hi, {{ name }} <a href="/logout">Log out</a></div>
+</div>
+
+<form id="add-form" class="add-form" method="POST" action="/todos/add" novalidate>
+    <input type="text" id="title" name="title" placeholder="What needs to be done?" value="{{ form_title }}">
+    <button type="submit">Add</button>
+    <span class="error" id="error-title">{% if error and error_id is none %}{{ error }}{% endif %}</span>
+</form>
+
+{% if items %}
+<ul class="todo-list">
+    {% for item in items %}
+    <li class="todo {% if item.is_done %}done{% endif %}">
+        <form method="POST" action="/todos/{{ item.todo_id }}/done">
+            <input type="hidden" name="is_done" value="{{ 0 if item.is_done else 1 }}">
+            <button type="submit" class="secondary" title="Mark done / not done">{{ '✔' if item.is_done else '○' }}</button>
+        </form>
+
+        <form class="edit-form" method="POST" action="/todos/{{ item.todo_id }}/edit" novalidate>
+            <input type="text" name="title" value="{{ item.title }}">
+            <button type="submit">Save</button>
+        </form>
+
+        <form class="delete-form" method="POST" action="/todos/{{ item.todo_id }}/delete">
+            <button type="submit" class="danger">Delete</button>
+        </form>
+
+        {% if error and error_id == item.todo_id %}
+        <span class="error" style="width:100%">{{ error }}</span>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="empty">No to-dos yet. Add your first one above.</p>
+{% endif %}
+
+<script src="{{ url_for('static', filename='todos.js') }}"></script>
+{% endblock %}
